@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.browser.controller.Controller">
+    <top>
+        <ToolBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #82ae67;"
+                 BorderPane.alignment="CENTER">
+            <Button fx:id="backbutton" mnemonicParsing="false" onAction="#back">
+            </Button>
+            <Button mnemonicParsing="false" fx:id="forwardbutton" onAction="#forward">
+            </Button>
+            <TextField fx:id="addressBar" prefHeight="25.0" prefWidth="627.0"/>
+            <Button mnemonicParsing="false" onAction="#go" style="-fx-background-color: #ae1111;" text="GO"
+                    textFill="WHITE"/>
+        </ToolBar>
+    </top>
+    <center>
+        <WebView fx:id="web" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+    </center>
+</BorderPane>
