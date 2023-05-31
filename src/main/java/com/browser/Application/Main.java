@@ -54,12 +54,11 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
 
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(FXML+"MainFXML.fxml"));
+        loader.setLocation(Main.class.getResource(FXML+"Main.fxml"));
         Parent root = loader.load();
 
         pane.getChildren().add(root);
         Scene scene = new Scene(pane);
-
 
         scene.setOnKeyPressed(event -> {
 
@@ -139,7 +138,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 
-        launch(args);
+        Application.launch(Main.class);
     }
 }
 

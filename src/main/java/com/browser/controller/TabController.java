@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 
 import javafx.concurrent.Worker.State;
 
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
@@ -26,6 +27,11 @@ import java.util.ResourceBundle;
 public class TabController implements Initializable {
 
     public JFXHamburger hamburger;
+    public GridPane navigationBar;
+    public Label reload;
+    public Label homepage;
+    public Label setting;
+    public Label search;
     @FXML
     private Label back;
 
@@ -39,22 +45,7 @@ public class TabController implements Initializable {
     private Label forward;
 
     @FXML
-    private Label homepage;
-
-    @FXML
-    private GridPane navigationBar;
-
-    @FXML
-    private Label reload;
-
-    @FXML
-    private Label search;
-
-    @FXML
-    private JFXTextField searchField;
-
-    @FXML
-    private Label setting;
+    private TextField searchField;
 
 
     public WebView browser = new WebView();

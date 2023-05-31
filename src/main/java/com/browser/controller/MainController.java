@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -21,13 +22,14 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
+    @FXML
+    private BorderPane root;
     private static final String BLANK = "_blank";
     private static final String TARGET = "target";
     private static final String CLICK = "click";
     public static TabPane tabPane = new TabPane();
     public Menu menu = new Menu();
     public VBox drawerPane = new VBox();
-    public BorderPane root;
     private static Tab firstTab = new Tab("New Tab");
     private static final Tab addNewTab = new Tab("+");
 
@@ -39,7 +41,7 @@ public class MainController implements Initializable {
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
 
         try {
-            firstTab.setContent(FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Main.FXML + "Tab.fxml"))));
+            firstTab.setContent(FXMLLoader.load(Objects.requireNonNull(MainController.class.getResource(Main.FXML + "Tab.fxml"))));
             firstTab.setText("Baidu");
         } catch (IOException e2) {
             e2.printStackTrace();

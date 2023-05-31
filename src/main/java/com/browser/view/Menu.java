@@ -24,7 +24,6 @@ public class Menu {
     JFXButton history = new JFXButton();
     JFXButton downloads = new JFXButton();
     JFXButton bookmarks = new JFXButton();
-    //JFXButton saveAsPdf = new JFXButton();
     JFXButton setting = new JFXButton();
 
     public JFXHamburger getHamburger(JFXHamburger hamburger , BorderPane borderpane , TabPane settingTabPane) {
@@ -45,44 +44,24 @@ public class Menu {
         setting.setGraphic(new ImageView(new Image(com.browser.Application.Main.IMAGES + "setting.png")));
         setting.setTooltip(new Tooltip("Setting"));
 
-        // ---------Drawer-Menus---------
-        /*
-         * Below is the menu view list that will appear from right side when
-         * clicked the hamburger.
-         */
 
         VBox vbox = new VBox();
         vbox.getChildren().addAll(history, downloads, bookmarks, setting);
         vbox.setSpacing(25);
         vbox.setId("rightDrawerVbox");
 
-        // ---------Right----DrawerStack----Add Drawer pane-------
-        /*
-         * Drawers-tack is container for drawer. We set the place of drawer is
-         * right whenever user clicked the hamburger it will appear from right
-         * side.Its default size 40, and we placed the --Draw-Menus-- in this
-         * drawer.
-         */
-
         rightDrawer.setDirection(DrawerDirection.RIGHT);
         rightDrawer.setDefaultDrawerSize(80);
         rightDrawer.setSidePane(vbox);
         rightDrawer.setOpacity(0.5);
 
-        // -----------Hamburger-----------------
+        // Hamburger
 
         borderpane.setRight(drawersStack);
         hamburger.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
             showHamburgerPane();
         });
 
-        // ---------MenuView-Class method ----menuView--------------
-        /*
-         * We are just sending all listener to another class as in this way can
-         * easily manager the listener Menu view. The purpose whenever one menu
-         * is clicked then this menView method send action event to MenuView
-         * Class method menuView.
-         */
         menuView.setMenuViewListener(history, downloads, bookmarks, setting, settingTabPane, drawersStack, rightDrawer);
         // setting.getStyleClass().addAll("animated-option-button","animated-option-sub-button2");
         setHistoryBtn(history);
