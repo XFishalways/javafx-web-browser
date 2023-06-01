@@ -121,7 +121,6 @@ public class MainController implements Initializable {
 
                 SingleSelectionModel<Tab> selectedTab = tabPane.getSelectionModel();
                 selectedTab.select(tab);
-
             }
         });
 

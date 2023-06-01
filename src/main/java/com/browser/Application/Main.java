@@ -89,7 +89,7 @@ public class Main extends Application {
     }
 
     public void setPane(StackPane pane) {
-        this.pane = pane;
+        Main.pane = pane;
     }
 
     public static StackPane getPane() {
@@ -110,7 +110,7 @@ public class Main extends Application {
 
 
     private void setStage(Stage stage) {
-        this.stage = stage;
+        Main.stage = stage;
     }
 
     public static Stage getStage() {

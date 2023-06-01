@@ -26,12 +26,6 @@ import java.util.ResourceBundle;
 
 public class TabController implements Initializable {
 
-    public JFXHamburger hamburger;
-    public GridPane navigationBar;
-    public Label reload;
-    public Label homepage;
-    public Label setting;
-    public Label search;
     @FXML
     private Label back;
 
@@ -45,7 +39,25 @@ public class TabController implements Initializable {
     private Label forward;
 
     @FXML
+    private JFXHamburger hamburger;
+
+    @FXML
+    private Label homepage;
+
+    @FXML
+    private GridPane navigationBar;
+
+    @FXML
+    private Label reload;
+
+    @FXML
+    private Label search;
+
+    @FXML
     private TextField searchField;
+
+    @FXML
+    private Label setting;
 
 
     public WebView browser = new WebView();
@@ -81,51 +93,45 @@ public class TabController implements Initializable {
     }
 
     private void pageRender(String url) {
-        webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
+        webEngine.getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
 
-            @Override
-            public void changed(ObservableValue ov, State oldState, State newState) {
+            if (newState == State.SUCCEEDED) {
 
-                if (newState == State.SUCCEEDED) {
+                searchField.setText(webEngine.getLocation());
+                Main.getStage().setTitle("CCN Browser");
 
-                    searchField.setText(webEngine.getLocation());
-                    Main.getStage().setTitle("CCN Browser");
-
-                    if (history.getCurrentIndex() == 0) {
-                        back.setDisable(true);
-                        forward.setDisable(true);
-                        if(history.getEntries().size()>1){
-                            forward.setDisable(false);
-                        }
-                    }
-
-                    if (history.getCurrentIndex() > 0) {
-                        back.setDisable(false);
+                if (history.getCurrentIndex() == 0) {
+                    back.setDisable(true);
+                    forward.setDisable(true);
+                    if(history.getEntries().size()>1){
                         forward.setDisable(false);
                     }
+                }
 
-                    if ((history.getCurrentIndex()+1) == history.getEntries().size()) {
-                        forward.setDisable(true);
+                if (history.getCurrentIndex() > 0) {
+                    back.setDisable(false);
+                    forward.setDisable(false);
+                }
+
+                if ((history.getCurrentIndex()+1) == history.getEntries().size()) {
+                    forward.setDisable(true);
+                }
+
+                URL domain = null;
+                if (!(webEngine.getLocation().equals("about:blank")))
+                    try {
+                        domain = new URL(webEngine.getLocation());
+                    } catch (MalformedURLException e) {
+                        System.err.println("Invalid domain.");
                     }
 
-                    URL domain = null;
-                    if (!(webEngine.getLocation().equals("about:blank")))
-                        try {
-                            domain = new URL(webEngine.getLocation());
-                        } catch (MalformedURLException e) {
-                            System.err.println("Invalid domain.");
-                        }
+                String username  = Main.getUsername();
 
-                    String username  = Main.getUsername();
-
-                    assert domain != null;
-                    History.insertUrl(username, webEngine.getLocation(), domain.getHost(), webEngine.getTitle());
-                }
+                assert domain != null;
+                History.insertUrl(username, webEngine.getLocation(), domain.getHost(), webEngine.getTitle());
             }
-
         });
 
         webEngine.load(url);
-        borderpane.setCenter(borderpane);
     }
 }
