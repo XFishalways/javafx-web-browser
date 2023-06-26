@@ -1,6 +1,5 @@
 package com.browser.view;
 
-import com.browser.Application.Main;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXDrawer.DrawerDirection;
@@ -15,7 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-public class Menu {
+public class Ham {
 
     public MenuView menuView = new MenuView();
     public JFXDrawersStack drawersStack = new JFXDrawersStack();
@@ -33,15 +32,15 @@ public class Menu {
         history.setTooltip(new Tooltip("History"));
 
         downloads.setMinSize(40, 40);
-        downloads.setGraphic(new ImageView(new Image(com.browser.Application.Main.IMAGES + "downloads.png")));
+        downloads.setGraphic(new ImageView(new Image(com.browser.Application.Main.IMAGES + "downloads.svg")));
         downloads.setTooltip(new Tooltip("Downloads"));
 
         bookmarks.setMinSize(40, 40);
-        bookmarks.setGraphic(new ImageView(new Image(com.browser.Application.Main.IMAGES + "bookmarks.png")));
+        bookmarks.setGraphic(new ImageView(new Image(com.browser.Application.Main.IMAGES + "bookmarks.svg")));
         bookmarks.setTooltip(new Tooltip("Bookmarks"));
 
         setting.setMinSize(40, 40);
-        setting.setGraphic(new ImageView(new Image(com.browser.Application.Main.IMAGES + "setting.png")));
+        setting.setGraphic(new ImageView(new Image(com.browser.Application.Main.IMAGES + "settings.svg")));
         setting.setTooltip(new Tooltip("Setting"));
 
 

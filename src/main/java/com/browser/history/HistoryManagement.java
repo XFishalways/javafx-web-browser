@@ -1,6 +1,8 @@
 package com.browser.history;
 
-public class History {
+import javafx.collections.ObservableList;
+
+public class HistoryManagement {
 
     public static void insertUrl(String Username, String url, String domain, String title) {
 
@@ -23,4 +25,8 @@ public class History {
     }
 
 
+    public static ObservableList<String> getDomainNames(ObservableList<String> domainNames) {
+
+        return domainNames;
+    }
 }

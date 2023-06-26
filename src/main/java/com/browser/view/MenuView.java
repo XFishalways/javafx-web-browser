@@ -53,7 +53,7 @@ public class MenuView {
             downloadsTab.setContent(FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Main.FXML + "Downloads.fxml"))));
 
             bookmarksTab.setText("Bookmarks");
-            bookmarksTab.setContent(FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Main.FXML + "bookmarks.fxml"))));
+//            bookmarksTab.setContent(FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Main.FXML + "bookmarks.fxml"))));
 
             settingTab.setText("Setting");
             settingTab.setContent(FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Main.FXML + "Setting.fxml"))));

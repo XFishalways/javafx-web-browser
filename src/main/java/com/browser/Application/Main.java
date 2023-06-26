@@ -117,28 +117,10 @@ public class Main extends Application {
         return stage;
     }
 
-    private static JFXDialogLayout content = new JFXDialogLayout();
-
-    public static void setDialouge(JFXButton applyButton , String heading , String text , Node ob) {
-
-        JFXButton button = applyButton;
-
-        content.setHeading(new Text(heading));
-        content.setBody(new Text(text));
-
-        JFXDialog dialogue = new JFXDialog(pane, content, JFXDialog.DialogTransition.CENTER);
-        button.addEventHandler(MouseEvent.MOUSE_CLICKED, (e6) -> {
-            dialogue.close();
-        });
-
-        content.setActions(ob, button);
-        dialogue.show();
-    }
-
-
     public static void main(String[] args) {
 
-        Application.launch(Main.class);
+        launch(args);
+        System.exit(1);
     }
 }
 

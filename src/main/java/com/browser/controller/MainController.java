@@ -1,7 +1,7 @@
 package com.browser.controller;
 
 import com.browser.Application.Main;
-import com.browser.view.Menu;
+import com.browser.view.Ham;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -28,9 +28,9 @@ public class MainController implements Initializable {
     private static final String TARGET = "target";
     private static final String CLICK = "click";
     public static TabPane tabPane = new TabPane();
-    public Menu menu = new Menu();
+    public Ham menu = new Ham();
     public VBox drawerPane = new VBox();
-    private static Tab firstTab = new Tab("New Tab");
+    private static Tab firstTab = new Tab("Initial Tab");
     private static final Tab addNewTab = new Tab("+");
 
     @Override
@@ -75,14 +75,11 @@ public class MainController implements Initializable {
                 com.browser.Application.Main.getStage().setTitle(tabPane.getSelectionModel().getSelectedItem().getText());
 
                 if (newSelectedTab == addNewTab) {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                creatNewTab(tabpane, addNewTab);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
+                    Platform.runLater(() -> {
+                        try {
+                            creatNewTab(tabpane, addNewTab);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
                     });
                 }
@@ -107,21 +104,18 @@ public class MainController implements Initializable {
     }
 
     public void creatNewTab(TabPane tabPane, Tab addNewTab) throws IOException {
-        Tab tab = new Tab("New tab");
+        Tab tab = new Tab("Baidu");
         tab.setContent(FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Main.FXML + "Tab.fxml"))));
         tab.getStyleClass().addAll("tab-pane");
 
         ObservableList<Tab> tabs = tabPane.getTabs();
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
+        Platform.runLater(() -> {
 
-                tabs.add(tabs.size() - 1, tab);
+            tabs.add(tabs.size() - 1, tab);
 
-                SingleSelectionModel<Tab> selectedTab = tabPane.getSelectionModel();
-                selectedTab.select(tab);
-            }
+            SingleSelectionModel<Tab> selectedTab = tabPane.getSelectionModel();
+            selectedTab.select(tab);
         });
 
     }
