@@ -4,6 +4,7 @@ import com.browser.Application.Main;
 import com.browser.history.HistoryManagement;
 
 import com.jfoenix.controls.*;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -12,17 +13,23 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 
 import javafx.concurrent.Worker.State;
 import javafx.concurrent.Worker;
 
+import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
@@ -34,6 +41,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
@@ -42,6 +50,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.browser.controller.MainController.tabPane;
+import static com.browser.controller.MainController.downloader;
 import com.browser.history.*;
 
 import com.browser.view.*;
@@ -259,6 +268,24 @@ public class TabController implements Initializable {
         });
 
         download.setOnMouseClicked(event -> {
+            try {
+                Tab tab = new Tab("Download Page");
+                tab.setContent(FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Main.FXML + "Downloads.fxml"))));
+                tab.getStyleClass().addAll("tab-pane");
+
+                ObservableList<Tab> tabs = tabPane.getTabs();
+
+                Platform.runLater(() -> {
+
+                    tabs.add(tabs.size() - 1, tab);
+
+                    SingleSelectionModel<Tab> selectedTab = tabPane.getSelectionModel();
+                    selectedTab.select(tab);
+                });
+            }
+            catch (IOException e){
+                System.err.println(e.toString());
+            }
 
         });
 

@@ -1,6 +1,7 @@
 package com.browser.controller;
 
 import com.browser.Application.Main;
+import com.browser.downloader.MainDownloader;
 import com.browser.view.Ham;
 
 import javafx.application.Platform;
@@ -28,6 +29,8 @@ public class MainController implements Initializable {
     private static final String TARGET = "target";
     private static final String CLICK = "click";
     public static TabPane tabPane = new TabPane();
+
+    public static MainDownloader downloader = new MainDownloader();
     public Ham menu = new Ham();
     public VBox drawerPane = new VBox();
     private static Tab firstTab = new Tab("Initial Tab");
