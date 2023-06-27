@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXTabPane;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -33,7 +34,7 @@ public class MenuView {
     private ObservableList<Tab> tabs;
     SingleSelectionModel<Tab> selectedTab;
     SingleSelectionModel<Tab> fxSelectedTab ;
-    public void setMenuViewListener(JFXButton history, JFXButton downloads, JFXButton bookmarks, JFXButton setting,
+    public void setMenuViewListener(Label history, Label downloads, Label bookmarks, Label setting,
                                     TabPane tabPane, JFXDrawersStack drawersStack, JFXDrawer rightDrawer) {
 
         tabs = tabPane.getTabs();
@@ -42,7 +43,7 @@ public class MenuView {
         fxSelectedTab = fxTabpane.getSelectionModel();
 
         try {
-            fxTabpane.setTabMinWidth(150);
+            fxTabpane.setTabMinWidth(100);
             fxTabpane.setTabMinHeight(30);
             fxTabpane.setId("settingTabPane");
 
@@ -75,7 +76,7 @@ public class MenuView {
          * its method getSettingView and give two arguments that is tab and
          * setting pane
          */
-        history.setOnAction((e)->{
+        history.setOnMouseClicked(event -> {
 
             onClickHideHamburger();
 
@@ -88,7 +89,7 @@ public class MenuView {
         });
 
 
-        downloads.setOnAction((e) -> {
+        downloads.setOnMouseClicked(event -> {
 
             onClickHideHamburger();
 
@@ -100,7 +101,7 @@ public class MenuView {
 
         });
 
-        bookmarks.setOnAction(event -> {
+        bookmarks.setOnMouseClicked(event -> {
 
             onClickHideHamburger();
 
@@ -112,13 +113,11 @@ public class MenuView {
 
         });
 
-        setting.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
+        setting.setOnMouseClicked(event -> {
 
             onClickHideHamburger();
 
             addAndSelectNewTab(tabs, selectedTab,fxSelectedTab, 3);
-
-            //	fxSelectedTab.select(3);
 
             tab.setText("Setting");
 

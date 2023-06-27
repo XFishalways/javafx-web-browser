@@ -118,6 +118,11 @@ public class TabController implements Initializable {
         return bookmark;
     }
 
+    private boolean isDownloadLink(String url) {
+
+        return url.endsWith(".zip") || url.endsWith(".rar") || url.endsWith(".exe");
+    }
+
     private int currentIndex;
 
     @Override
@@ -150,21 +155,22 @@ public class TabController implements Initializable {
 
         homepage.setGraphic(new ImageView(new Image(Objects.requireNonNull(Objects.requireNonNull(getClass()).getResourceAsStream(Main.IMAGES + "home.png")))));
 
-        // Worker load the page
+        // loader
         worker = webEngine.getLoadWorker();
         worker.stateProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println("Loading state: " + newValue.toString());
             if (newValue == State.SUCCEEDED) {
                 System.out.println("Finish!");
 
-                // The current url title set in current tab
-                tabPane.getSelectionModel().getSelectedItem().setText(webEngine.getTitle());
-
-                org.w3c.dom.Document doc = webEngine.getDocument();
-
-                searchField.setText(webEngine.getLocation());
+                String currentURL = webEngine.getLocation();
+                if (isDownloadLink(currentURL)) {
+                    // TODO 调用下载
+                } else {
+                    // 正常打开网页
+                    tabPane.getSelectionModel().getSelectedItem().setText(webEngine.getTitle());
+                    searchField.setText(currentURL);
+                }
             }
-
         });
 
         history.currentIndexProperty().addListener((observable, oldValue, newValue) -> {
@@ -296,14 +302,13 @@ public class TabController implements Initializable {
                         System.err.println("Invalid domain.");
                     }
 
-                String username  = Main.getUsername();
-
                 assert domain != null;
-                HistoryManagement.insertUrl(username, webEngine.getLocation(), domain.getHost(), webEngine.getTitle());
+                HistoryManagement.insertUrl(webEngine.getLocation(), domain.getHost(), webEngine.getTitle());
             }
         });
 
         webEngine.load(url);
         borderpane.setCenter(browser);
     }
+
 }

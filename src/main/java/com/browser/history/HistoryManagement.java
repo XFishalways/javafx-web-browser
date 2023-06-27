@@ -4,12 +4,8 @@ import javafx.collections.ObservableList;
 
 public class HistoryManagement {
 
-    public static void insertUrl(String Username, String url, String domain, String title) {
+    public static void insertUrl(String url, String domain, String title) {
 
-    }
-
-    public static String getUsername() {
-        return null;
     }
 
     public static void deleteHistory() {

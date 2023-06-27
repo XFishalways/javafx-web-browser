@@ -48,8 +48,6 @@ public class Main extends Application {
 
     private static StackPane pane = new StackPane();
 
-    private static String username;
-
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -79,13 +77,6 @@ public class Main extends Application {
 
         setStage(stage);
         setScene(scene);
-
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("输入用户名");
-        dialog.setHeaderText(null);
-        dialog.setContentText("请输入用户名：");
-        dialog.showAndWait();
-        username = dialog.getResult();
     }
 
     public void setPane(StackPane pane) {
@@ -94,10 +85,6 @@ public class Main extends Application {
 
     public static StackPane getPane() {
         return pane;
-    }
-
-    public static String getUsername() {
-        return username;
     }
 
     private void setScene(Scene scene) {

@@ -6,6 +6,7 @@ import com.jfoenix.controls.JFXDrawer.DrawerDirection;
 import com.jfoenix.controls.JFXDrawersStack;
 import com.jfoenix.controls.JFXHamburger;
 
+import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -19,11 +20,10 @@ public class Ham {
     public MenuView menuView = new MenuView();
     public JFXDrawersStack drawersStack = new JFXDrawersStack();
     public JFXDrawer rightDrawer = new JFXDrawer();
-    JFXButton home = new JFXButton();
-    JFXButton history = new JFXButton();
-    JFXButton downloads = new JFXButton();
-    JFXButton bookmarks = new JFXButton();
-    JFXButton setting = new JFXButton();
+    Label history = new Label();
+    Label downloads = new Label();
+    Label bookmarks = new Label();
+    Label setting = new Label();
 
     public JFXHamburger getHamburger(JFXHamburger hamburger , BorderPane borderpane , TabPane settingTabPane) {
 
@@ -63,7 +63,7 @@ public class Ham {
 
         menuView.setMenuViewListener(history, downloads, bookmarks, setting, settingTabPane, drawersStack, rightDrawer);
         // setting.getStyleClass().addAll("animated-option-button","animated-option-sub-button2");
-        setHistoryBtn(history);
+        setHistory(history);
         return hamburger;
     }
 
@@ -76,11 +76,18 @@ public class Ham {
         drawersStack.toggle(rightDrawer, false);
     }
 
-    public void setHistoryBtn(JFXButton history) {
+    public void setHistory(Label history) {
         this.history = history;
     }
 
-    public JFXButton getHistory() {
+    public Label getHistory() {
         return history;
+    }
+
+    public void setDownloads(Label downloads) {
+        this.downloads = downloads;
+    }
+    public Label getDownloads() {
+        return downloads;
     }
 }
