@@ -50,10 +50,8 @@ public class Test {
 				// downloadManager.start();
 				// }
 			}
-		} catch (IOException e1) {
+		} catch (IOException | InterruptedException e1) {
 			e1.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 	}
 }

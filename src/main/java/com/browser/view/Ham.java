@@ -32,15 +32,15 @@ public class Ham {
         history.setTooltip(new Tooltip("History"));
 
         downloads.setMinSize(40, 40);
-        downloads.setGraphic(new ImageView(new Image(com.browser.Application.Main.IMAGES + "downloads.svg")));
+        downloads.setGraphic(new ImageView(new Image(com.browser.Application.Main.IMAGES + "downloads.png")));
         downloads.setTooltip(new Tooltip("Downloads"));
 
         bookmarks.setMinSize(40, 40);
-        bookmarks.setGraphic(new ImageView(new Image(com.browser.Application.Main.IMAGES + "bookmarks.svg")));
+        bookmarks.setGraphic(new ImageView(new Image(com.browser.Application.Main.IMAGES + "bookmarks.png")));
         bookmarks.setTooltip(new Tooltip("Bookmarks"));
 
         setting.setMinSize(40, 40);
-        setting.setGraphic(new ImageView(new Image(com.browser.Application.Main.IMAGES + "settings.svg")));
+        setting.setGraphic(new ImageView(new Image(com.browser.Application.Main.IMAGES + "settings.png")));
         setting.setTooltip(new Tooltip("Setting"));
 
 

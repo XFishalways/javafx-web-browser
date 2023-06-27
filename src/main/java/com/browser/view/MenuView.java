@@ -59,7 +59,7 @@ public class MenuView {
             settingTab.setContent(FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Main.FXML + "Setting.fxml"))));
 
         } catch (IOException e1) {
-            System.out.println("Setting tabs fxml files not loading");
+            System.out.println("tabs' fxml files not loading");
         }
 
         this.drawersStack = drawersStack;

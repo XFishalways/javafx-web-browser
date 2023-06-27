@@ -4,6 +4,9 @@ import com.browser.Application.Main;
 import com.browser.history.HistoryManagement;
 
 import com.jfoenix.controls.*;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -45,9 +48,8 @@ import com.browser.view.*;
 import org.controlsfx.control.textfield.TextFields;
 
 public class TabController implements Initializable {
-
+    @FXML
     public Label download;
-    public JFXProgressBar progressbar;
     @FXML
     private Label back;
 
@@ -86,10 +88,19 @@ public class TabController implements Initializable {
     public WebEngine webEngine = browser.getEngine();
     private WebHistory history = webEngine.getHistory();
 
+    BooleanProperty backAvailable = new SimpleBooleanProperty(false);
+    BooleanProperty forwardAvailable = new SimpleBooleanProperty(false);
+
+//    Bindings.bindBidirectional(backAvailable, history.currentIndexProperty(), index -> index.intValue() > 0);
+//    Bindings.bindBidirectional(forwardAvailable, history.currentIndexProperty(), index -> index.intValue() < history.getEntries().size() - 1);
+//    backButton.setDisable(!backAvailable.get());
+//    forwardButton.setDisable(!forwardAvailable.get());
+
     public Worker<Void> worker;
     private final Ham ham = new Ham();
 
     static WebEngine engine;
+    WebHistory webHistory = webEngine.getHistory();
 
     public void setWebEngine(WebEngine webEngine) {
         engine = webEngine;
@@ -107,6 +118,8 @@ public class TabController implements Initializable {
         return bookmark;
     }
 
+    private int currentIndex;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -116,20 +129,26 @@ public class TabController implements Initializable {
         searchField.setText("https://www.baidu.com");
         pageRender(searchField.getText());
 
-        back.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "arrow-left.svg")))));
+        searchField.setEditable(true);
+
+        back.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "arrow-left.png")))));
         back.setDisable(true);
 
-        forward.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "arrow-right.svg")))));
+        forward.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "arrow-right.png")))));
         forward.setDisable(true);
 
-        reload.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "refresh.svg")))));
+        reload.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "refresh.png")))));
 
-        search.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "search.svg")))));
+        search.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "search.png")))));
         search.setId("search");
 
-        download.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "downloads.svg")))));
+        download.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "downloads.png")))));
 
-        bookmark.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "bookmarks.svg")))));
+        bookmark.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "bookmarks.png")))));
+
+        setting.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "settings.png")))));
+
+        homepage.setGraphic(new ImageView(new Image(Objects.requireNonNull(Objects.requireNonNull(getClass()).getResourceAsStream(Main.IMAGES + "home.png")))));
 
         // Worker load the page
         worker = webEngine.getLoadWorker();
@@ -143,8 +162,18 @@ public class TabController implements Initializable {
 
                 org.w3c.dom.Document doc = webEngine.getDocument();
 
+                searchField.setText(webEngine.getLocation());
             }
 
+        });
+
+        history.currentIndexProperty().addListener((observable, oldValue, newValue) -> {
+            currentIndex = newValue.intValue();
+
+//            back.setVisible(currentIndex > 0);
+            back.setDisable(currentIndex <= 0);
+//            forward.setVisible(currentIndex < history.getEntries().size() - 1);
+            forward.setDisable(currentIndex >= history.getEntries().size() - 1);
         });
 
         webEngine.locationProperty().addListener((observable, oldValue, newValue) -> {
@@ -153,16 +182,14 @@ public class TabController implements Initializable {
 
         });
 
-        progressbar.progressProperty().bind(worker.progressProperty());
-
-
         ham.getHamburger(hamburger, borderpane, tabPane);
 
-//        search.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
-//
-//            pageRender(searchField.getText());
-//
-//        });
+        search.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
+
+            pageRender(searchField.getText());
+            System.out.println("clicked");
+
+        });
 
         // Search Field Listener
 
@@ -195,9 +222,8 @@ public class TabController implements Initializable {
         });
 
 
-        back.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
+        back.setOnMouseClicked(event -> {
             try {
-
                 System.out.println("Max size :" + history.getEntries().size());
                 System.out.println("Current index backward: " + history.getCurrentIndex());
                 history.go(-1);
@@ -207,7 +233,7 @@ public class TabController implements Initializable {
             }
         });
 
-        forward.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
+        forward.setOnMouseClicked(event -> {
             try {
                 System.out.println("Max size :" + history.getEntries().size());
                 System.out.println("Current index forward: " + history.getCurrentIndex());
@@ -218,16 +244,22 @@ public class TabController implements Initializable {
             }
         });
 
-        reload.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
+        reload.setOnMouseClicked(event -> {
             webEngine.reload();
         });
 
-        bookmark.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
+        bookmark.setOnMouseClicked(event -> {
 
         });
 
-        download.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
+        download.setOnMouseClicked(event -> {
 
+        });
+
+        homepage.setOnMouseClicked(event -> {
+
+            searchField.setText("https://www.baidu.com");
+            pageRender(searchField.getText());
         });
     }
 

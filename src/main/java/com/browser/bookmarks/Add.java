@@ -29,8 +29,8 @@ public class Add {
                 arrList.get(i).add(" " + s.next());
             }
             s.close();
-        } catch (FileNotFoundException e) {
-
+        } catch (FileNotFoundException e1) {
+            System.out.println(e1);
         }
         num = num + 1;
         arrList.add(new ArrayList<>());
@@ -47,8 +47,8 @@ public class Add {
                 }
             }
             bufferedWriter.close();
-        } catch (IOException e) {
-
+        } catch (IOException e1) {
+            System.out.println(e1);
         }
     }
 }
