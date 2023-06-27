@@ -41,6 +41,8 @@ public class Main extends Application {
     public static String CSS = "/css/";
     public static String IMAGES = "/img/";
 
+    public static String DOWNLOADS = "/downloads/";
+
     MainController object = new MainController();
     static Stage stage;
 

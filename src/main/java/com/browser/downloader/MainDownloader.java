@@ -1,9 +1,9 @@
 package com.browser.downloader;
 
-import com.browser.downloader.DownloadManager;
-import com.browser.downloader.DownloadMission;
+import com.browser.Application.Main;
 
-import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +14,36 @@ public class MainDownloader {
     public MainDownloader(){
         myDownloadManager =  DownloadManager.getInstance();
     }
-    public void addDownloadTask(String url,String filePath,String fileName) throws IOException {
+
+    private String getNameFromURL(String urlString) throws Exception{
+        URL url = new URL(urlString);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.connect();
+        String disposition = conn.getHeaderField("Content-Disposition");
+        String fileName = null;
+        if (disposition != null && disposition.indexOf("filename=") != -1) {
+            fileName = disposition.substring(disposition.indexOf("filename=") + 9);
+        } else {
+            fileName = url.getPath().substring(url.getPath().lastIndexOf('/') + 1);
+        }
+        return fileName;
+    }
+    public void addDownloadTask(String url,String filePath) throws Exception {
+
+        String fileName = getNameFromURL(url);
         DownloadMission newMission = new DownloadMission(url,filePath,fileName);
+
+        myDownloadManager.addMission(newMission);
+        myDownloadManager.start();
+        MissionIdList.add(newMission.getMissionID());
+    }
+
+    public void addDownloadTask(String url) throws Exception {
+
+        String fileName = getNameFromURL(url);
+        DownloadMission newMission = new DownloadMission(url, Main.DOWNLOADS, fileName);
+
         myDownloadManager.addMission(newMission);
         myDownloadManager.start();
         MissionIdList.add(newMission.getMissionID());
@@ -42,5 +70,7 @@ public class MainDownloader {
         return MissionIdList;
     }
 
-
+    public int getTotal() {
+        return MissionIdList.size();
+    }
 }

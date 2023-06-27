@@ -42,6 +42,7 @@ import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
@@ -127,9 +128,21 @@ public class TabController implements Initializable {
         return bookmark;
     }
 
-    private boolean isDownloadLink(String url) {
-
-        return url.endsWith(".zip") || url.endsWith(".rar") || url.endsWith(".exe");
+    private boolean isDownloadLink(String urlString) throws Exception {
+        URL url = new URL(urlString);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        String type = conn.getContentType();
+        String disposition = conn.getHeaderField("Content-Disposition");
+        if (disposition != null && disposition.toLowerCase().contains("attachment;")){
+            return true;
+        }
+        else if (type.toLowerCase().contains("application")){
+            return true;
+        }
+        else{
+            return false;
+        }
+        //return url.endsWith(".zip") || url.endsWith(".rar") || url.endsWith(".exe");
     }
 
     private int currentIndex;
@@ -172,8 +185,26 @@ public class TabController implements Initializable {
                 System.out.println("Finish!");
 
                 String currentURL = webEngine.getLocation();
-                if (isDownloadLink(currentURL)) {
+
+                boolean flag = false;
+
+                try{
+                    flag = isDownloadLink(currentURL);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                if (flag) {
+
                     // TODO 调用下载
+                    try {
+                        downloader.addDownloadTask(currentURL);
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                 } else {
                     // 正常打开网页
                     tabPane.getSelectionModel().getSelectedItem().setText(webEngine.getTitle());
@@ -194,6 +225,28 @@ public class TabController implements Initializable {
         webEngine.locationProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println("location of engine: " + newValue);
             // TODO 下载入口！！！！！
+            String currentURL = webEngine.getLocation();
+
+            boolean flag = false;
+
+            try{
+                flag = isDownloadLink(currentURL);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
+            if (flag) {
+
+                // TODO 调用下载
+                try {
+                    downloader.addDownloadTask(currentURL);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
 
         });
 
