@@ -175,7 +175,7 @@ public class MenuView {
 
     public void getBookMarkView() throws FileNotFoundException {
         TableViewSample tableViewSample = new TableViewSample();
-        bookmarksTab = tableViewSample.getBookmarkView(bookmarksTab);
+//        bookmarksTab = tableViewSample.getBookmarkView(bookmarksTab);
     }
 
     public void onClickHideHamburger() {

@@ -1,9 +1,12 @@
 package com.browser.controller;
 
 import com.browser.Application.Main;
+import com.browser.bookmarks.Add;
+import com.browser.bookmarks.TableViewSample;
 import com.browser.history.HistoryManagement;
 
 import com.jfoenix.controls.*;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -12,28 +15,31 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 
 import javafx.concurrent.Worker.State;
 import javafx.concurrent.Worker;
 
-import javafx.scene.control.SingleSelectionModel;
-import javafx.scene.control.Tab;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -41,6 +47,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -60,6 +67,7 @@ import org.controlsfx.control.textfield.TextFields;
 public class TabController implements Initializable {
     @FXML
     public Label download;
+    public Label past;
     @FXML
     private Label back;
 
@@ -98,8 +106,15 @@ public class TabController implements Initializable {
     public WebEngine webEngine = browser.getEngine();
     private WebHistory history = webEngine.getHistory();
 
-    BooleanProperty backAvailable = new SimpleBooleanProperty(false);
-    BooleanProperty forwardAvailable = new SimpleBooleanProperty(false);
+    ObservableList<WebHistory.Entry> entries = history.getEntries();
+
+    private Add add = new Add();
+    private TableViewSample tableViewSample = new TableViewSample();
+
+    private final TableView<TableViewSample.Bookmark> table = new TableView<>();
+    private final ObservableList<TableViewSample.Bookmark> data = FXCollections.observableArrayList();
+    final HBox hb = new HBox();
+    int num = 0;
 
 //    Bindings.bindBidirectional(backAvailable, history.currentIndexProperty(), index -> index.intValue() > 0);
 //    Bindings.bindBidirectional(forwardAvailable, history.currentIndexProperty(), index -> index.intValue() < history.getEntries().size() - 1);
@@ -173,9 +188,9 @@ public class TabController implements Initializable {
 
         bookmark.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "bookmarks.png")))));
 
-        setting.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "settings.png")))));
-
         homepage.setGraphic(new ImageView(new Image(Objects.requireNonNull(Objects.requireNonNull(getClass()).getResourceAsStream(Main.IMAGES + "home.png")))));
+
+        past.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(Main.IMAGES + "history.png")))));
 
         // loader
         worker = webEngine.getLoadWorker();
@@ -183,28 +198,22 @@ public class TabController implements Initializable {
             System.out.println("Loading state: " + newValue.toString());
             if (newValue == State.SUCCEEDED) {
                 System.out.println("Finish!");
-
                 String currentURL = webEngine.getLocation();
 
                 boolean flag = false;
-
                 try{
                     flag = isDownloadLink(currentURL);
                 }
                 catch (Exception e){
                     e.printStackTrace();
                 }
-
-                if (flag) {
-
-                    // TODO 调用下载
+                if (flag) { // 调用下载
                     try {
                         downloader.addDownloadTask(currentURL);
                     }
                     catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 } else {
                     // 正常打开网页
                     tabPane.getSelectionModel().getSelectedItem().setText(webEngine.getTitle());
@@ -224,20 +233,15 @@ public class TabController implements Initializable {
 
         webEngine.locationProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println("location of engine: " + newValue);
-            // TODO 下载入口！！！！！
             String currentURL = webEngine.getLocation();
-
             boolean flag = false;
-
             try{
                 flag = isDownloadLink(currentURL);
             }
             catch (Exception e){
                 e.printStackTrace();
             }
-
             if (flag) {
-
                 // TODO 调用下载
                 try {
                     downloader.addDownloadTask(currentURL);
@@ -245,12 +249,8 @@ public class TabController implements Initializable {
                 catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
         });
-
-        ham.getHamburger(hamburger, borderpane, tabPane);
 
         search.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
 
@@ -258,8 +258,6 @@ public class TabController implements Initializable {
             System.out.println("clicked");
 
         });
-
-        // Search Field Listener
 
         searchField.setOnKeyPressed(event -> {
 
@@ -278,7 +276,6 @@ public class TabController implements Initializable {
             }
 
             ObservableList<String> domainNames = FXCollections.observableArrayList();
-            domainNames = com.browser.history.HistoryManagement.getDomainNames(domainNames);
             String[] array = new String[domainNames.size()];
 
             for (int a = 0; a < domainNames.size(); a++) {
@@ -318,7 +315,141 @@ public class TabController implements Initializable {
 
         bookmark.setOnMouseClicked(event -> {
 
+            Stage stage = new Stage();
+            try {
+                tableViewSample.read_from_file();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            Scene scene = new Scene(new Group());
+            stage.setTitle("BookmarkManager");
+            stage.setWidth(650);
+            stage.setHeight(550);
+
+            final Label label = new Label("Bookmarks");
+            label.setFont(new Font("Arial", 20));
+
+            table.setEditable(true);
+
+            TableColumn<TableViewSample.Bookmark, String> titleCol = new TableColumn<>("Title");
+            titleCol.setMinWidth(100);
+            titleCol.setCellValueFactory(new PropertyValueFactory<>("Title"));
+            titleCol.setCellFactory(TextFieldTableCell.forTableColumn());
+            titleCol.setOnEditCommit(
+                    (TableColumn.CellEditEvent<TableViewSample.Bookmark, String> t) -> {
+                        t.getTableView().getItems().get(
+                                t.getTablePosition().getRow()).setTitle(t.getNewValue());
+                    });
+            TableColumn<TableViewSample.Bookmark, String> typeCol = new TableColumn<>("type");
+            typeCol.setMinWidth(100);
+            typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
+            typeCol.setCellFactory(TextFieldTableCell.forTableColumn());
+            typeCol.setOnEditCommit(
+                    (TableColumn.CellEditEvent<TableViewSample.Bookmark, String> t) -> {
+                        t.getTableView().getItems().get(
+                                t.getTablePosition().getRow()).setType(t.getNewValue());
+                    });
+            TableColumn<TableViewSample.Bookmark, String> urlCol = new TableColumn<>("url");
+            urlCol.setMinWidth(100);
+            urlCol.setCellValueFactory(new PropertyValueFactory<>("url"));
+            urlCol.setCellFactory(TextFieldTableCell.forTableColumn());
+            urlCol.setOnEditCommit(
+                    (TableColumn.CellEditEvent<TableViewSample.Bookmark, String> t) -> {
+                        t.getTableView().getItems().get(
+                                t.getTablePosition().getRow()).setUrl(t.getNewValue());
+                    });
+            TableColumn<TableViewSample.Bookmark, String> tipCol = new TableColumn<>("Tip");
+            tipCol.setMinWidth(200);
+            tipCol.setCellValueFactory(new PropertyValueFactory<>("tip"));
+            tipCol.setCellFactory(TextFieldTableCell.forTableColumn());
+            tipCol.setOnEditCommit(
+                    (TableColumn.CellEditEvent<TableViewSample.Bookmark, String> t) -> {
+                        t.getTableView().getItems().get(
+                                t.getTablePosition().getRow()).setTip(t.getNewValue());
+                    });
+
+            table.setItems(data);
+            table.getColumns().addAll(titleCol,typeCol, urlCol, tipCol);
+
+            final TextField addTitle = new TextField();
+            addTitle.setPromptText("Title");
+            addTitle.setMaxWidth(titleCol.getPrefWidth());
+            final TextField addType = new TextField();
+            addType.setMaxWidth(typeCol.getPrefWidth());
+            addType.setPromptText("type");
+            final TextField addUrl = new TextField();
+            addUrl.setMaxWidth(urlCol.getPrefWidth());
+            addUrl.setPromptText("url");
+            final TextField addTip = new TextField();
+            addTip.setMaxWidth(tipCol.getPrefWidth());
+            addTip.setPromptText("Tip");
+
+            final Button addButton = new Button("Add");
+            addButton.setOnAction((ActionEvent e) -> {
+
+                if (!(Objects.equals(addTip.getText(), "") || Objects.equals(addTitle.getText(), "") || Objects.equals(addUrl.getText(), "") || Objects.equals(addType.getText(), ""))) {
+                    num++;
+                    data.add(new TableViewSample.Bookmark(
+                            addTitle.getText(),
+                            addType.getText(),
+                            addUrl.getText(),
+                            addTip.getText()));
+                    addTitle.clear();
+                    addType.clear();
+                    addUrl.clear();
+                    addTip.clear();
+                }
+            });
+            final Button DeleteButton = new Button("Delete");
+            DeleteButton.setOnAction((ActionEvent e) -> {
+                num--;
+                table.getItems().remove(table.selectionModelProperty().getValue().getSelectedIndex());
+            });
+            hb.getChildren().addAll(addTitle, addType, addUrl, addTip, addButton, DeleteButton);
+            hb.setSpacing(3);
+
+            final VBox vbox = new VBox();
+            vbox.setSpacing(5);
+            vbox.setPadding(new Insets(10, 0, 0, 10));
+            vbox.getChildren().addAll(label, table, hb);
+
+            ((Group) scene.getRoot()).getChildren().addAll(vbox);
+
+            stage.setScene(scene);
+            stage.show();
         });
+
+        past.setOnMouseClicked(event -> {
+            TableView<WebHistory.Entry> tableView = new TableView<>();
+            ObservableList<WebHistory.Entry> data = FXCollections.observableArrayList();
+
+            TableColumn<WebHistory.Entry, String> titleColumn = new TableColumn<>("标题");
+            titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+
+            TableColumn<WebHistory.Entry, String> urlColumn = new TableColumn<>("URL");
+            urlColumn.setCellValueFactory(new PropertyValueFactory<>("url"));
+
+            TableColumn<WebHistory.Entry, String> visitedColumn = new TableColumn<>("最近访问");
+            visitedColumn.setCellValueFactory(new PropertyValueFactory<>("lastVisitedDate"));
+
+            // 添加新的历史记录条目
+            data.addAll(entries);
+
+            tableView.getColumns().addAll(titleColumn, urlColumn, visitedColumn);
+            tableView.setItems(data);
+
+            VBox layout = new VBox(tableView);
+            Scene scene = new Scene(layout);
+
+            Stage stage = new Stage();
+            stage.setTitle("历史记录");
+            stage.setScene(scene);
+            stage.setWidth(800);
+            stage.setHeight(600);
+            stage.show();
+
+        });
+
 
         download.setOnMouseClicked(event -> {
             try {

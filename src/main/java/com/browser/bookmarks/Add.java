@@ -14,7 +14,7 @@ public class Add {
         int num = 0;
         List<List<String>> arrList = new ArrayList<>();
         try {
-            File file = new File("C:\\Users\\Cyan\\Desktop\\jiwang.txt");
+            File file = new File("C:\\Users\\ThinkPad\\Desktop\\bookmark.txt");
             if (!file.exists()) {
                 System.out.println("文件未找到");
                 System.exit(0);
@@ -29,8 +29,8 @@ public class Add {
                 arrList.get(i).add(" " + s.next());
             }
             s.close();
-        } catch (FileNotFoundException e1) {
-            System.out.println(e1);
+        } catch (FileNotFoundException e) {
+
         }
         num = num + 1;
         arrList.add(new ArrayList<>());
@@ -39,7 +39,7 @@ public class Add {
         arrList.get(num - 1).add(" " + url);
         arrList.get(num - 1).add(" " + tip);
         try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("C:\\Users\\Cyan\\Desktop\\jiwang.txt"));
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("C:\\Users\\ThinkPad\\Desktop\\bookmark.txt"));
             bufferedWriter.write(String.valueOf(num));
             for (List<String> strings : arrList) {
                 for (String string : strings) {
@@ -47,8 +47,8 @@ public class Add {
                 }
             }
             bufferedWriter.close();
-        } catch (IOException e1) {
-            System.out.println(e1);
+        } catch (IOException e) {
+
         }
     }
 }

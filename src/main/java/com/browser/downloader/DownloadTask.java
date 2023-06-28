@@ -68,7 +68,6 @@ class DownloadTask extends Thread {
         conn.setConnectTimeout(3000);
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Range", "bytes=" + lowerBound + "-" + upperBound);
-//        System.out.println("thread_"+ threadId +": " + lowerBound + "-" + upperBound);
         conn.connect();
 
         int statusCode = conn.getResponseCode();

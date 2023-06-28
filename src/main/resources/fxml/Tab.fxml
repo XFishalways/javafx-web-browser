@@ -34,10 +34,10 @@
                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="5.0" percentWidth="3.0" prefWidth="5.0" />
                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="5.0" percentWidth="3.0" prefWidth="5.0" />
                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="25.0" minWidth="20.0" prefWidth="25.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="25.0" minWidth="20.0" prefWidth="25.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="25.0" minWidth="20.0" prefWidth="25.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="25.0" minWidth="20.0" prefWidth="25.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="5.0" percentWidth="3.0" prefWidth="5.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="5.0" percentWidth="3.0" prefWidth="5.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="5.0" percentWidth="3.0" prefWidth="5.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="5.0" percentWidth="3.0" prefWidth="5.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -48,21 +48,13 @@
                         <Label fx:id="reload" GridPane.columnIndex="2" />
                         <Label fx:id="homepage"  GridPane.columnIndex="3" />
                         <Label fx:id="bookmark"  GridPane.columnIndex="6" />
-                        <Label fx:id="setting" GridPane.columnIndex="8" />
-                        <Label fx:id="download" GridPane.columnIndex="7" />
+                        <Label fx:id="past" GridPane.columnIndex="7" />
+                        <Label fx:id="download" GridPane.columnIndex="8" />
                         <Label fx:id="search" GridPane.columnIndex="5" />
                         <Label text="Label" GridPane.columnIndex="4" />
                         <TextField fx:id="searchField" minWidth="200.0" GridPane.columnIndex="4" GridPane.halignment="LEFT" />
                      </children>
                   </GridPane>
-                  <JFXHamburger fx:id="hamburger" minWidth="35.0" prefWidth="35.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                      <GridPane.margin>
-                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                      </GridPane.margin>
-                      <padding>
-                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                      </padding>
-                  </JFXHamburger>
                </children>
             </GridPane>
          </top>

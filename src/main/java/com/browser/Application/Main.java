@@ -74,6 +74,7 @@ public class Main extends Application {
 
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource(CSS + "stylesheet.css")).toExternalForm());
         stage.setTitle("CCN Browser");
+        stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
 
