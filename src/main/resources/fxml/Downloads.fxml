@@ -11,12 +11,10 @@
             fx:controller="com.browser.controller.DownloadController"
             minWidth="700.0" prefHeight="600.0" prefWidth="700.0">
     <HBox spacing="10">
-        <Label text="Download ID" />
-        <Label text="File Name" />
-        <Label text="Progress" />
-        <Label text="Speed" />
-        <Label text="File Size" />
-        <Label text="Action" />
+        <Label minWidth="200" text="File Name" />
+        <Label minWidth="100" text="File Size" />
+        <Label minWidth="400" text="Progress" />
+        <Label minWidth="-Infinity" text="Action" />
     </HBox>
     <VBox fx:id="container" spacing="10" />
 

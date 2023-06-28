@@ -1,35 +1,45 @@
 package com.browser.downloader;
 
+import com.browser.Application.Main;
+
 import java.io.*;
 import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Downloader {
+public class Downloader extends Thread{
     private static final int DEFAULT_THREAD_COUNT = 4;  // 默认线程数量
     private AtomicBoolean canceled; // 取消状态，如果有一个子线程出现异常，则取消整个下载任务
     private DownloadFile file; // 下载的文件对象
     private String storageLocation;
     private final int threadCount; // 线程数量
     private long fileSize; // 文件大小
+
+    private final String fileName;
     private final String url;
     private long beginTime; // 开始时间
     private Logger logger;
 
-    public Downloader(String url) {
-        this(url, DEFAULT_THREAD_COUNT);
-    }
-
-    public Downloader(String url, int threadCount) {
+    public Downloader(String url,String fileName) {
         this.url = url;
-        this.threadCount = threadCount;
+        this.threadCount = DEFAULT_THREAD_COUNT;
         this.canceled = new AtomicBoolean(false);
-        this.storageLocation = url.substring(url.lastIndexOf('/')+1);
+        this.storageLocation = Main.DOWNLOADS + fileName;
         this.logger = new Logger(storageLocation + ".log", url, threadCount);
+        this.fileName = fileName;
     }
 
-    public void start() {
+//    public Downloader(String url, int threadCount, String filePath) {
+//        this.url = url;
+//        this.threadCount = threadCount;
+//        this.canceled = new AtomicBoolean(false);
+//        this.storageLocation = filePath;
+//        this.logger = new Logger(storageLocation + ".log", url, threadCount);
+//    }
+
+    @Override
+    public void run() {
         boolean reStart = Files.exists(Path.of(storageLocation + ".log"));
         if (reStart) {
             logger = new Logger(storageLocation + ".log");
@@ -118,7 +128,7 @@ public class Downloader {
     /**
      * @return 要下载的文件的尺寸
      */
-    private long getFileSize() {
+    public long getFileSize() {
         if (fileSize != 0) {
             return fileSize;
         }
@@ -138,8 +148,23 @@ public class Downloader {
         return conn.getContentLengthLong();
     }
 
-    public static void main(String[] args) throws IOException {
-        new Downloader("http://js.xiazaicc.com//down2/ucliulanqi_downcc.zip").start();
+    public String getUrl() {
+        return url;
+    }
+
+    public DownloadFile getFile() {
+        return file;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public double getDownloadedSize(){
+        return file.getWroteSize()/1024.0/1024;
+    }
+    public double getProgress(){
+        return file.getWroteSize() / (double)fileSize ;
     }
 }
 

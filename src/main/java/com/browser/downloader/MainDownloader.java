@@ -9,10 +9,9 @@ import java.util.List;
 
 public class MainDownloader {
 
-    private DownloadManager myDownloadManager;
-    private List<Integer> MissionIdList = new ArrayList<>();
+    private List<Downloader> MissionList = new ArrayList<>();
     public MainDownloader(){
-        myDownloadManager =  DownloadManager.getInstance();
+
     }
 
     private String getNameFromURL(String urlString) throws Exception{
@@ -29,48 +28,42 @@ public class MainDownloader {
         }
         return fileName;
     }
-    public void addDownloadTask(String url,String filePath) throws Exception {
-
-        String fileName = getNameFromURL(url);
-        DownloadMission newMission = new DownloadMission(url,filePath,fileName);
-
-        myDownloadManager.addMission(newMission);
-        myDownloadManager.start();
-        MissionIdList.add(newMission.getMissionID());
-    }
-
     public void addDownloadTask(String url) throws Exception {
 
         String fileName = getNameFromURL(url);
-        DownloadMission newMission = new DownloadMission(url, Main.DOWNLOADS, fileName);
+        Downloader newMission = new Downloader(url,fileName);
 
-        myDownloadManager.addMission(newMission);
-        myDownloadManager.start();
-        MissionIdList.add(newMission.getMissionID());
+        MissionList.add(newMission);
+        newMission.start();
     }
 
-    public void start(){
-        myDownloadManager.start();
-        //DownloadMission tmpMission = myDownloadManager.getMission(missionID);
+//    public void start(){
+//        myDownloadManager.start();
+//        //DownloadMission tmpMission = myDownloadManager.getMission(missionID);
+//    }
+//
+//    public void pause(int missionID){
+//        myDownloadManager.pauseMission(missionID);
+//    }
+//
+//    public void cancel(int missionID){
+//        myDownloadManager.cancelMission(missionID);
+//    }
+
+    public Downloader getMission(String url){
+        for( Downloader mission : MissionList) {
+            if(mission.getUrl() == url){
+                return mission;
+            }
+        }
+        return null;
     }
 
-    public void pause(int missionID){
-        myDownloadManager.pauseMission(missionID);
-    }
-
-    public void cancel(int missionID){
-        myDownloadManager.cancelMission(missionID);
-    }
-
-    public DownloadMission getMission(int missionID){
-        return myDownloadManager.getMission(missionID);
-    }
-
-    public List<Integer> getIdList(){
-        return MissionIdList;
+    public List<Downloader> getMissionList(){
+        return MissionList;
     }
 
     public int getTotal() {
-        return MissionIdList.size();
+        return MissionList.size();
     }
 }
